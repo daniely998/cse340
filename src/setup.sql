@@ -54,3 +54,49 @@ INSERT INTO project (organization_id, title, description, project_location, proj
 (3, 'Senior Support Program', 'Organizing visits and assistance for elderly residents.', 'Sunrise Retirement Home', '2026-08-16'),
 (3, 'Youth Mentorship Initiative', 'Pairing volunteers with at-risk youth for guidance and support.', 'Youth Center', '2026-09-09'),
 (3, 'Holiday Gift Drive', 'Collecting and distributing gifts for children during the holiday season.', 'City Square', '2026-12-01');
+
+-- ========================================
+-- Category Table
+-- ========================================
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Junction table for many-to-many relationship
+CREATE TABLE project_category (
+    project_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    PRIMARY KEY (project_id, category_id),
+    FOREIGN KEY (project_id) REFERENCES project (project_id),
+    FOREIGN KEY (category_id) REFERENCES category (category_id)
+);
+
+-- Add categories
+INSERT INTO category (name) VALUES
+('Sustainability'),
+('Education'),
+('Community Service');
+
+-- Associate projects to categories
+INSERT INTO project_category (project_id, category_id) VALUES
+(1, 1), (1, 3),
+(2, 1),
+(3, 1),
+(4, 3),
+(5, 1),
+(6, 1), (6, 3),
+(7, 2), (7, 1),
+(8, 2),
+(9, 1),
+(10, 1), (10, 2),
+(11, 3),
+(12, 3), (12, 1),
+(13, 3),
+(14, 2), (14, 3),
+(15, 3);
+
+SELECT * FROM organization;
+SELECT * FROM project;
+SELECT * FROM category;
+SELECT * FROM project_category;
