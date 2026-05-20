@@ -1,4 +1,3 @@
-
 <%- include('partials/header') %>
 
 <main>
@@ -6,7 +5,7 @@
     <h2>Upcoming Service Projects</h2>
     <ul>
         <% projects.forEach(project => { %>
-            <li><%= project.project_date.toISOString().split('T')[0] %>: <%= project.title %> (<%= project.organization_name %>)</li>
+            <li><%= project.project_date.toISOString().split('T')[0] %>:&nbsp;<a href="/project/<%= project.project_id %>"><%= project.title %></a>&nbsp;(<a href="/organization/<%= project.organization_id %>"><%= project.name %></a>)</li>
         <% }); %>
     </ul>
 
