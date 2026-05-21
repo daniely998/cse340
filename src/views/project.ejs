@@ -8,5 +8,11 @@
     <p>Date: <%= projectDetails.project_date.toISOString().split('T')[0] %></p>
     <p>Location: <%= projectDetails.project_location %></p>
     <p>Partner Organization: <a href="/organization/<%= projectDetails.organization_id %>"><%= projectDetails.name %></a></p>
+    <p>Categories: </p>
+    <ul>
+        <% categories.forEach(category => { %>
+            <li><a href="/category/<%= category.category_id %>"><%= category.name %></a></li>
+        <% }); %>
+    </ul>
 </main>
 <%- include('partials/footer') %>
