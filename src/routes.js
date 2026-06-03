@@ -38,7 +38,8 @@ import {
     processLogout,
     requireLogin,
     showDashboard,
-    requireRole
+    requireRole,
+    showUsersPage
 } from './controllers/users.js';
 import { testErrorPage } from './controllers/errors.js';
 
@@ -48,6 +49,7 @@ router.get('/', showHomePage);
 router.get('/organizations', showOrganizationsPage);
 router.get('/projects', showProjectsPage);
 router.get('/categories', showCategoriesPage);
+router.get('/users', requireRole('admin'), showUsersPage);
 
 // Route for organization details page
 router.get('/organization/:id', showOrganizationDetailsPage);
