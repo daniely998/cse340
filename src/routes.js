@@ -17,7 +17,9 @@ import {
     processNewProjectForm,
     projectValidation,
     showEditProjectForm,
-    processEditProjectForm
+    processEditProjectForm,
+    volunteerForProject,
+    withdrawFromProject
 } from './controllers/projects.js';
 import {
     showCategoriesPage,
@@ -39,7 +41,8 @@ import {
     requireLogin,
     showDashboard,
     requireRole,
-    showUsersPage
+    showUsersPage,
+    withdrawFromDashboard
 } from './controllers/users.js';
 import { testErrorPage } from './controllers/errors.js';
 
@@ -57,6 +60,13 @@ router.get('/organization/:id', showOrganizationDetailsPage);
 router.get('/project/:id', showProjectDetailsPage);
 // Route for category details page
 router.get('/category/:id', showCategoryDetailsPage);
+
+// Volunteer and withdraw
+router.get('/project/:id/volunteer', requireLogin, volunteerForProject);
+router.get('/project/:id/unvolunteer', requireLogin, withdrawFromProject);
+
+// Dashboard withdraw
+router.get('/dashboard/unvolunteer', requireLogin, withdrawFromDashboard);
 
 // Route for new organization page
 router.get('/new-organization', requireRole('admin'), showNewOrganizationForm);

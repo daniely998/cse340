@@ -121,6 +121,17 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ========================================
+-- Volunteers Table
+-- ========================================
+CREATE TABLE volunteers (
+    user_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    PRIMARY KEY (user_id, project_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (project_id) REFERENCES project (project_id)
+);
+
 SELECT * FROM organization;
 SELECT * FROM project;
 SELECT * FROM category;

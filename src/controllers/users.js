@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
+import { removeVolunteer, getUserProjects} from '../models/volunteers.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -73,12 +74,14 @@ const requireLogin = (req, res, next) => {
     next();
 };
 
-const showDashboard = (req, res) => {
+const showDashboard = async (req, res) => {
     const user = req.session.user;
+    const projects = await getUserProjects(user.user_id);
     res.render('dashboard', { 
         title: 'Dashboard',
         name: user.name,
-        email: user.email
+        email: user.email,
+        projects
     });
 };
 
@@ -115,6 +118,21 @@ const showUsersPage = async (req, res) => {
     res.render('users', { title, users });
 };
 
+const withdrawFromDashboard = async (req, res) => {
+    const projectId = req.query.projectId;
+    console.log(req.query);
+
+    try {
+        await removeVolunteer(req.session.user.user_id, projectId);
+        req.flash('success', 'You have withdrawn from the project.');
+    } catch (error) {
+        console.error('Error removing volunteer:', error);
+        req.flash('error', 'There was an error withdrawing from the project.');
+    }
+
+    res.redirect('/dashboard');
+};
+
 export {
     showUserRegistrationForm,
     processUserRegistrationForm,
@@ -124,5 +142,6 @@ export {
     requireLogin,
     showDashboard,
     requireRole,
-    showUsersPage
+    showUsersPage,
+    withdrawFromDashboard
 };

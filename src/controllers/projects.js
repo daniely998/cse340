@@ -2,6 +2,7 @@
 import { getAllProjects, getUpcomingProjects, getProjectDetails, createProject, updateProject } from '../models/projects.js';
 import { getCategoryByProjectId } from '../models/categories.js';
 import { getAllOrganizations } from '../models/organizations.js';
+import { addVolunteer, removeVolunteer, checkVolunteer } from '../models/volunteers.js';
 import { body, validationResult } from 'express-validator';
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -41,7 +42,12 @@ const showProjectDetailsPage = async (req, res) => {
     const categories = await getCategoryByProjectId(projectId);
     const title = 'Project Details';
 
-    res.render('project', { title, projectDetails, categories });
+    let isVolunteer = false;
+    if (req.session.user) {
+        isVolunteer = await checkVolunteer(req.session.user.user_id, projectId);
+    };
+
+    res.render('project', { title, projectDetails, categories, isVolunteer });
 };
 
 const showNewProjectForm = async (req, res) => {
@@ -113,6 +119,35 @@ const processEditProjectForm = async (req, res) => {
     res.redirect(`/project/${projectId}`);
 };
 
+const volunteerForProject = async (req, res) => {
+    const projectId = req.params.id;
+
+    try {
+        await addVolunteer(req.session.user.user_id, projectId);
+        req.flash('success', 'You are now volunteering for this project!');
+    } catch (error) {
+        console.error('Error adding volunteer:', error);
+        req.flash('error', 'There was an error volunteering for the project.');
+    }
+
+    res.redirect(`/project/${projectId}`);
+};
+
+const withdrawFromProject = async (req, res) => {
+    const projectId = req.params.id;
+
+    try {
+        await removeVolunteer(req.session.user.user_id, projectId);
+        req.flash('success', 'You have withdrawn from this project.');
+    } catch (error) {
+        console.error('Error removing volunteer:', error);
+        req.flash('error', 'There was an error withdrawing from the project.');
+    }
+
+    res.redirect(`/project/${projectId}`);
+};
+
+
 // Export any controller functions
 export {
     showProjectsPage,
@@ -121,5 +156,7 @@ export {
     processNewProjectForm,
     projectValidation,
     showEditProjectForm,
-    processEditProjectForm
+    processEditProjectForm,
+    volunteerForProject,
+    withdrawFromProject
 };

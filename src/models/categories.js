@@ -70,7 +70,7 @@ const assignCategoryToProject = async(categoryId, projectId) => {
     `;
 
     await db.query(query, [categoryId, projectId]);
-}
+};
 
 const updateCategoryAssignments = async(projectId, categoryIds) => {
     // First, remove existing category assignments for the project
